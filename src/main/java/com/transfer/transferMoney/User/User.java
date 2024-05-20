@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class User implements UserDetails {
     private  String firstname;
     private  String lastname;
     private  Long dni;
+    private BigInteger cbu;
     private  BigDecimal moneyAccount;
     @Enumerated(EnumType.STRING)
     private  Role role;

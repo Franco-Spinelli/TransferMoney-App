@@ -12,6 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Service
 @RequiredArgsConstructor
@@ -31,12 +35,14 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        BigInteger cbu = generateRandomNumber();
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .dni(request.getDni())
+                .cbu(cbu)
                 .moneyAccount(BigDecimal.valueOf(0))
                 .role(Role.USER)
                 .build();
@@ -44,5 +50,19 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
                 .build();
+    }
+    public BigInteger generateRandomNumber() {
+        final SecureRandom RANDOM = new SecureRandom();
+         final int NUM_DIGITS = 22;
+        BigInteger min = new BigInteger("1" + "0".repeat(NUM_DIGITS - 1));
+        BigInteger max = new BigInteger("9".repeat(NUM_DIGITS));
+        BigInteger range = max.subtract(min).add(BigInteger.ONE);
+
+        BigInteger randomNumber;
+        do {
+            randomNumber = new BigInteger(range.bitLength(), RANDOM);
+        } while (randomNumber.compareTo(min) < 0 || randomNumber.compareTo(max) > 0);
+
+        return randomNumber;
     }
 }
