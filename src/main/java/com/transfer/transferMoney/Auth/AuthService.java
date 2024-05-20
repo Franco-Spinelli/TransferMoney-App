@@ -2,8 +2,8 @@ package com.transfer.transferMoney.Auth;
 
 import com.transfer.transferMoney.JWT.JwtService;
 import com.transfer.transferMoney.Repository.UserRepository;
-import com.transfer.transferMoney.User.Role;
-import com.transfer.transferMoney.User.User;
+import com.transfer.transferMoney.model.Role;
+import com.transfer.transferMoney.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-
-import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Service
 @RequiredArgsConstructor

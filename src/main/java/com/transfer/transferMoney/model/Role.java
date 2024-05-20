@@ -1,4 +1,4 @@
-package com.transfer.transferMoney.User;
+package com.transfer.transferMoney.model;
 
 public enum Role {
     ADMIN,

@@ -1,8 +1,9 @@
 package com.transfer.transferMoney.service;
 
 import com.transfer.transferMoney.Repository.UserRepository;
-import com.transfer.transferMoney.User.User;
+import com.transfer.transferMoney.model.User;
 import com.transfer.transferMoney.dto.UserDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
+    @Autowired
     private UserRepository userRepository;
 
     @Override

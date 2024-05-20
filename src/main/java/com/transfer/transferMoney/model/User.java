@@ -1,4 +1,4 @@
-package com.transfer.transferMoney.User;
+package com.transfer.transferMoney.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,22 +19,26 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username","dni"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username","dni"})})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false)
-    private  String username;
+    private String username;
     @Column(nullable = false)
-    private  String password;
-    private  String firstname;
-    private  String lastname;
-    private  Long dni;
+    private String password;
+    private String firstname;
+    private String lastname;
+    private Long dni;
     private BigInteger cbu;
-    private  BigDecimal moneyAccount;
+    private BigDecimal moneyAccount;
     @Enumerated(EnumType.STRING)
-    private  Role role;
+    private Role role;
+    @OneToMany(mappedBy = "recipientUser")
+    private List<Transfer> receivedTransferList;
+    @OneToMany(mappedBy = "originUser")
+    private List<Transfer> myTransferList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
