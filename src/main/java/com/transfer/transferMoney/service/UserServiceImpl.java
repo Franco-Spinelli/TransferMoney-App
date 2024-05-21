@@ -33,7 +33,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<Transfer> findTransfersReceivedByUserId(Integer userId) {
+        return userRepository.findTransfersReceivedByUserId(userId);
+    }
+
+    @Override
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public User findByCbu(BigInteger cbu) {
+        return userRepository.findByCbu(cbu).orElse(null);
     }
 }

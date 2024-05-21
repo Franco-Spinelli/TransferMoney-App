@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface TransferService {
-    TransferDTO saveTransfer(Transfer transfer);
+    Transfer saveTransfer(Transfer transfer);
     TransferDTO searchTransferById(Integer id);
 
 }

@@ -14,7 +14,6 @@ public class UserDTO {
     private  String username;
     private  String firstname;
     private  String lastname;
-    private BigDecimal moneyAccount;
     private  Long dni;
     private BigInteger cbu;
 }

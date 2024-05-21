@@ -33,17 +33,33 @@ public class UserController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         List<Transfer>transferList = userService.findTransfersMadeByUserId(user.getId());
+        List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
+
+        return ResponseEntity.ok(transferDTOList);
+    }
+
+    private static List<TransferDTO> getTransferDTOS(List<Transfer> transferList) {
         List<TransferDTO>transferDTOList = new ArrayList<>();
         for (Transfer transfer : transferList){
             TransferDTO transferDTO = new TransferDTO(
                     transfer.getTransfer_id(),
                     transfer.getRecipientUser().getUsername(),
+                    transfer.getRecipientUser().getCbu(),
                     transfer.getOriginUser().getUsername(),
                     transfer.getTransferAmount()
             );
             transferDTOList.add(transferDTO);
         }
+        return transferDTOList;
+    }
 
+    @GetMapping("receivedTransfers")
+    public ResponseEntity<?>transfersReceived(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        List<Transfer>transferList = userService.findTransfersReceivedByUserId(user.getId());
+        List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
         return ResponseEntity.ok(transferDTOList);
     }
 }

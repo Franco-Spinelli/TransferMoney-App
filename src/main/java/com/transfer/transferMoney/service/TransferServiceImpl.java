@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,21 +25,24 @@ public class TransferServiceImpl implements TransferService{
     private UserService userService;
 
     @Override
-    public TransferDTO saveTransfer(Transfer transfer) {
+    public Transfer saveTransfer(Transfer transfer) {
         int numberResult = 0;
         BigDecimal minimumTransferAmount = new BigDecimal(100);
+        Transfer newTransfer = new Transfer();
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
         String username = authentication.getName();
         User userOrigin = userService.findByUsername(username);
         User userRecipient = userService.findByUsername(transfer.getRecipientUser().getUsername());
         transfer.setOriginUser(userOrigin);
-        if(transfer.getTransferAmount().compareTo(minimumTransferAmount)>=numberResult) {
+
+        if(transfer.getTransferAmount().compareTo(minimumTransferAmount)>=numberResult && !Objects.equals(transfer.getRecipientUser().getUsername(), userOrigin.getUsername()) && !Objects.equals(transfer.getRecipientUser().getCbu(), userOrigin.getCbu())) {
             if (userOrigin.getMoneyAccount().compareTo(transfer.getTransferAmount()) >= numberResult) {
                 userOrigin.setMoneyAccount(userOrigin.getMoneyAccount().subtract(transfer.getTransferAmount()));
                 userService.save(userOrigin);
                 userRecipient.setMoneyAccount(userRecipient.getMoneyAccount().add(transfer.getTransferAmount()));
                 userService.save(userRecipient);
-                Transfer newTransfer = transferRepository.save(transfer);
+                newTransfer = transferRepository.save(transfer);
             } else {
                 throw new AccountBalanceException("Insufficient funds");
             }
@@ -46,7 +50,7 @@ public class TransferServiceImpl implements TransferService{
             throw new AccountBalanceException("The minimum transfer amount is " + minimumTransferAmount);
         }
 
-        return new TransferDTO(transfer.getTransfer_id(), userRecipient.getUsername(),userOrigin.getUsername(),transfer.getTransferAmount());
+        return newTransfer;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class TransferServiceImpl implements TransferService{
             return null;
         }
         Transfer newTransfer = optionalTransfer.get();
-        return new TransferDTO(newTransfer.getTransfer_id(), newTransfer.getRecipientUser().getUsername(),newTransfer.getOriginUser().getUsername(),newTransfer.getTransferAmount());
+        return new TransferDTO(newTransfer.getTransfer_id(), newTransfer.getRecipientUser().getUsername(),newTransfer.getRecipientUser().getCbu(),newTransfer.getOriginUser().getUsername(),newTransfer.getTransferAmount());
     }
 
 }

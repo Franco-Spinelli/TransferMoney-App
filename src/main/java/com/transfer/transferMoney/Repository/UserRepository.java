@@ -4,6 +4,7 @@ import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
@@ -20,6 +21,10 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     // Query method to find transfers made by a specific user
     @Query("SELECT t FROM Transfer t WHERE t.originUser.id = :userId")
-    List<Transfer> findTransfersMadeByUserId(Integer userId);
+    List<Transfer> findTransfersMadeByUserId(@Param("userId") Integer userId);
+    // Query method to find transfers made by a specific user
+    @Query("SELECT t FROM Transfer t WHERE t.recipientUser.id = :userId")
+    List<Transfer> findTransfersReceivedByUserId(@Param("userId") Integer userId);
+
 
 }

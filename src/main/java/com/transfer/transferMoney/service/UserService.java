@@ -11,6 +11,8 @@ public interface UserService {
     User searchByCbu(BigInteger cbu);
     User findByUsername(String username);
     List<Transfer> findTransfersMadeByUserId(Integer userId);
+    List<Transfer> findTransfersReceivedByUserId(Integer userId);
     void save(User user);
 
+    User findByCbu(BigInteger cbu);
 }

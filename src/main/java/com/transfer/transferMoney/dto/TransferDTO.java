@@ -7,12 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferDTO {
     private Integer transfer_id;
     private String recipientUser;
+    private BigInteger recipientCbu;
     private String originUser;
-    private BigDecimal transferMount;
+    private BigDecimal transferAmount;
 }
