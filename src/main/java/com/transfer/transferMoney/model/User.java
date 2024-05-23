@@ -30,6 +30,7 @@ public class User implements UserDetails {
     private String password;
     private String firstname;
     private String lastname;
+    @Column(nullable = false)
     private Long dni;
     private BigInteger cbu;
     private BigDecimal moneyAccount;

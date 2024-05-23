@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Override
-    public User searchByDni(Integer dni) {return userRepository.searchByDni(dni).orElse(null); }
+    public User searchByDni(Long dni) {return userRepository.searchByDni(dni).orElse(null); }
     @Override
     public User searchByCbu(BigInteger cbu) {
         return userRepository.findByCbu(cbu).orElse(null);
@@ -45,5 +45,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findByCbu(BigInteger cbu) {
         return userRepository.findByCbu(cbu).orElse(null);
+    }
+
+    @Override
+    public boolean existByDni(Long dni) {
+        return userRepository.searchByDni(dni).isPresent();
+    }
+
+    @Override
+    public boolean existByUsername(String username) {
+        return  userRepository.findByUsername(username).isPresent();
     }
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @Builder
@@ -24,5 +25,6 @@ public class Transfer {
     @ManyToOne
     @JoinColumn(name = "originUser_id")
     private User originUser;
+    private Date transferDate;
     private BigDecimal transferAmount;
 }

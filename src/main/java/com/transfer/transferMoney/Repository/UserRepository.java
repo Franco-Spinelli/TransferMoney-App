@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.cbu = :cbu")
     Optional<User> findByCbu(BigInteger cbu);
     @Query("SELECT u FROM User u WHERE u.dni = :dni")
-    Optional<User> searchByDni(Integer dni);
+    Optional<User> searchByDni(Long dni);
 
     // Query method to find transfers made by a specific user
     @Query("SELECT t FROM Transfer t WHERE t.originUser.id = :userId")

@@ -13,6 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 @RestController
 @RequestMapping("/transfer")
 @RequiredArgsConstructor
@@ -26,15 +31,16 @@ public class TransferController {
         User user = new User();
         if(transferDTO.getRecipientUser()==null){
             user = userService.findByCbu(transferDTO.getRecipientCbu());
+            transferDTO.setRecipientUser(user.getUsername());
         }else if(transferDTO.getRecipientCbu()==null){
             user = userService.findByUsername(transferDTO.getRecipientUser());
+            transferDTO.setRecipientCbu(user.getCbu());
         }
-        Transfer transfer = new Transfer(transferDTO.getTransfer_id(),user,null,transferDTO.getTransferAmount());
+        Transfer transfer = new Transfer(null,user,null,new Date(),transferDTO.getTransferAmount());
         Transfer newtransfer = transferService.saveTransfer(transfer);
         transferDTO.setOriginUser(newtransfer.getOriginUser().getUsername());
-        transferDTO.setRecipientUser(newtransfer.getRecipientUser().getUsername());
-        transferDTO.setRecipientCbu(newtransfer.getRecipientUser().getCbu());
         transferDTO.setTransfer_id(newtransfer.getTransfer_id());
+        transferDTO.setTransferDate(newtransfer.getTransferDate());
         return ResponseEntity.ok(transferDTO);
     }
 }

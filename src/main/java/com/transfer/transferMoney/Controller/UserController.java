@@ -46,6 +46,7 @@ public class UserController {
                     transfer.getRecipientUser().getUsername(),
                     transfer.getRecipientUser().getCbu(),
                     transfer.getOriginUser().getUsername(),
+                    transfer.getTransferDate(),
                     transfer.getTransferAmount()
             );
             transferDTOList.add(transferDTO);

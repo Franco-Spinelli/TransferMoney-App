@@ -2,8 +2,10 @@ package com.transfer.transferMoney.Auth;
 
 import com.transfer.transferMoney.JWT.JwtService;
 import com.transfer.transferMoney.Repository.UserRepository;
+import com.transfer.transferMoney.exceptions.DniUsernameExistException;
 import com.transfer.transferMoney.model.Role;
 import com.transfer.transferMoney.model.User;
+import com.transfer.transferMoney.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,12 +16,14 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -34,20 +38,26 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         BigInteger cbu = generateRandomNumber();
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .dni(request.getDni())
-                .cbu(cbu)
-                .moneyAccount(BigDecimal.valueOf(1000))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .build();
+
+        if(!userService.existByDni(request.getDni()) && !userService.existByUsername(request.getUsername())){
+            User user = User.builder()
+                    .username(request.getUsername())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .firstname(request.getFirstname())
+                    .lastname(request.getLastname())
+                    .dni(request.getDni())
+                    .cbu(cbu)
+                    .moneyAccount(BigDecimal.valueOf(1000))
+                    .role(Role.USER)
+                    .build();
+            userRepository.save(user);
+            return AuthResponse.builder()
+                    .token(jwtService.getToken(user))
+                    .build();
+        }
+        else {
+            throw new DniUsernameExistException("Dni or Username already exist");
+        }
     }
     public BigInteger generateRandomNumber() {
         final SecureRandom RANDOM = new SecureRandom();

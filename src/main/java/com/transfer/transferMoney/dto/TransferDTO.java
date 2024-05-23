@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +18,6 @@ public class TransferDTO {
     private String recipientUser;
     private BigInteger recipientCbu;
     private String originUser;
+    private Date transferDate;
     private BigDecimal transferAmount;
 }

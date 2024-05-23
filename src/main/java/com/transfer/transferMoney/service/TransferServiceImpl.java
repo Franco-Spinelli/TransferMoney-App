@@ -28,7 +28,7 @@ public class TransferServiceImpl implements TransferService{
     public Transfer saveTransfer(Transfer transfer) {
         int numberResult = 0;
         BigDecimal minimumTransferAmount = new BigDecimal(100);
-        Transfer newTransfer = new Transfer();
+
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
         String username = authentication.getName();
@@ -42,7 +42,7 @@ public class TransferServiceImpl implements TransferService{
                 userService.save(userOrigin);
                 userRecipient.setMoneyAccount(userRecipient.getMoneyAccount().add(transfer.getTransferAmount()));
                 userService.save(userRecipient);
-                newTransfer = transferRepository.save(transfer);
+                return  transferRepository.save(transfer);
             } else {
                 throw new AccountBalanceException("Insufficient funds");
             }
@@ -50,7 +50,6 @@ public class TransferServiceImpl implements TransferService{
             throw new AccountBalanceException("The minimum transfer amount is " + minimumTransferAmount);
         }
 
-        return newTransfer;
     }
 
     @Override
@@ -60,7 +59,7 @@ public class TransferServiceImpl implements TransferService{
             return null;
         }
         Transfer newTransfer = optionalTransfer.get();
-        return new TransferDTO(newTransfer.getTransfer_id(), newTransfer.getRecipientUser().getUsername(),newTransfer.getRecipientUser().getCbu(),newTransfer.getOriginUser().getUsername(),newTransfer.getTransferAmount());
+        return new TransferDTO(newTransfer.getTransfer_id(), newTransfer.getRecipientUser().getUsername(),newTransfer.getRecipientUser().getCbu(),newTransfer.getOriginUser().getUsername(),newTransfer.getTransferDate(),newTransfer.getTransferAmount());
     }
 
 }
