@@ -1,5 +1,6 @@
 package com.transfer.transferMoney.Controller;
 
+import com.transfer.transferMoney.dto.DepositDTO;
 import com.transfer.transferMoney.dto.TransferDTO;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
@@ -9,25 +10,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
+
     @Autowired
     private UserService userService;
-    @PostMapping(value = "userTransfer")
-    public String welcome(){
-        return "Welcome for secure endpoint";
+    @PutMapping("/deposit")
+    public ResponseEntity<?> deposit(@RequestBody DepositDTO depositDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        user.setMoneyAccount(user.getMoneyAccount().add(depositDTO.getMoneyToDeposit()));
+        depositDTO.setDate(new Date());
+        userService.save(user);
+        return ResponseEntity.ok(String.format("Deposited $%s on %s", depositDTO.getMoneyToDeposit(), new SimpleDateFormat("MM/dd/yyyy").format(depositDTO.getDate())));
     }
-    @GetMapping("transfers")
+    @GetMapping("/transfers")
     public ResponseEntity<?>transfers(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
         String username = authentication.getName();
@@ -35,6 +44,18 @@ public class UserController {
         List<Transfer>transferList = userService.findTransfersMadeByUserId(user.getId());
         List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
 
+        return ResponseEntity.ok(transferDTOList);
+    }
+
+
+
+    @GetMapping("/receivedTransfers")
+    public ResponseEntity<?>transfersReceived(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        List<Transfer>transferList = userService.findTransfersReceivedByUserId(user.getId());
+        List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
         return ResponseEntity.ok(transferDTOList);
     }
 
@@ -52,15 +73,5 @@ public class UserController {
             transferDTOList.add(transferDTO);
         }
         return transferDTOList;
-    }
-
-    @GetMapping("receivedTransfers")
-    public ResponseEntity<?>transfersReceived(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-        List<Transfer>transferList = userService.findTransfersReceivedByUserId(user.getId());
-        List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
-        return ResponseEntity.ok(transferDTOList);
     }
 }

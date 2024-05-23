@@ -5,6 +5,7 @@ import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import com.transfer.transferMoney.service.TransferService;
 import com.transfer.transferMoney.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/transfer")
+@RequestMapping("/api/transfer")
 @RequiredArgsConstructor
 public class TransferController {
     @Autowired
@@ -35,6 +36,8 @@ public class TransferController {
         }else if(transferDTO.getRecipientCbu()==null){
             user = userService.findByUsername(transferDTO.getRecipientUser());
             transferDTO.setRecipientCbu(user.getCbu());
+        }else{
+            throw new EntityNotFoundException("User o Cbu no exist");
         }
         Transfer transfer = new Transfer(null,user,null,new Date(),transferDTO.getTransferAmount());
         Transfer newtransfer = transferService.saveTransfer(transfer);
