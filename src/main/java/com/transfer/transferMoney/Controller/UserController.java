@@ -2,6 +2,7 @@ package com.transfer.transferMoney.Controller;
 
 import com.transfer.transferMoney.dto.DepositDTO;
 import com.transfer.transferMoney.dto.TransferDTO;
+import com.transfer.transferMoney.dto.UserDTO;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import com.transfer.transferMoney.service.UserService;
@@ -26,6 +27,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @GetMapping("/me")
+    public ResponseEntity<?>information(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        UserDTO userDTO = new UserDTO(user.getId(), user.getUsername(),user.getFirstname(),user.getLastname(),user.getDni(),user.getCbu());
+        return ResponseEntity.ok(userDTO);
+    }
     @PutMapping("/deposit")
     public ResponseEntity<?> deposit(@RequestBody DepositDTO depositDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
