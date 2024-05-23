@@ -30,9 +30,9 @@ TransferMoney App is a money transfer management application developed with Spri
 
 ### Users
 
--**POST /api/user/deposit**: Deposit money into the user's account.
--**GET /api/user/transfers**: Get transfers sent by the authenticated user.
--**GET /api/user/receivedTransfers**: Get transfers received by the authenticated user.
+- **POST /api/user/deposit**: Deposit money into the user's account.
+- **GET /api/user/transfers**: Get transfers sent by the authenticated user.
+- **GET /api/user/receivedTransfers**: Get transfers received by the authenticated user.
 - **GET /api/user/me**: Get information of the authenticated user.
 
 ### Transactions
