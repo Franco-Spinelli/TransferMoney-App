@@ -47,7 +47,7 @@ public class AuthService {
                     .lastname(request.getLastname())
                     .dni(request.getDni())
                     .cbu(cbu)
-                    .moneyAccount(BigDecimal.valueOf(0))
+                    .moneyAccount(BigDecimal.valueOf(1))
                     .role(Role.USER)
                     .build();
             userRepository.save(user);
