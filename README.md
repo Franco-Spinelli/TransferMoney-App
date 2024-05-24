@@ -44,6 +44,7 @@ TransferMoney App is a money transfer management application developed with Spri
 {
 "username":"eample1",
 "password":"password1",
+"mail":"example1@gmail.com",
 "firstname":"exampleName",
 "lastname":"exampleLastname",
 "dni":"000000000"
