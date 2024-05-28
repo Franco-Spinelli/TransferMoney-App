@@ -42,7 +42,7 @@ TransferMoney App is a money transfer management application developed with Spri
 ## Usage Examples
  POST http://localhost:8080/api/auth/register
 {
-"username":"eample1",
+"username":"example1",
 "password":"password1",
 "mail":"example1@gmail.com",
 "firstname":"exampleName",
@@ -52,7 +52,7 @@ TransferMoney App is a money transfer management application developed with Spri
 
 POST http://localhost:8080/api/auth/login
 {
-"username":"eample1",
+"username":"example1",
 "password":"password1"
 }
 
@@ -63,7 +63,7 @@ POST http://localhost:8080//api/user/deposit
 
 POST http://localhost:8080/api/transfer/create
 {
-  "recipientUser": "exmple1",
+  "recipientUser": "example1",
   "transferAmount": 990.50
 }
 
