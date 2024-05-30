@@ -1,8 +1,6 @@
 package com.transfer.transferMoney.Controller;
 
-import com.transfer.transferMoney.dto.DepositDTO;
-import com.transfer.transferMoney.dto.TransferDTO;
-import com.transfer.transferMoney.dto.UserDTO;
+import com.transfer.transferMoney.dto.*;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import com.transfer.transferMoney.service.UserService;
@@ -33,7 +31,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
         String username = authentication.getName();
         User user = userService.findByUsername(username);
-        UserDTO userDTO = new UserDTO(user.getId(), user.getUsername(),user.getFirstname(),user.getLastname(),user.getDni(),user.getCbu());
+        UserAdditionalInfoDTO userDTO = new UserAdditionalInfoDTO(user.getId(), user.getUsername(),user.getFirstname(),user.getLastname(),user.getDni(),user.getCbu(),user.getMoneyAccount(),user.getEmail());
         return ResponseEntity.ok(userDTO);
     }
     @PutMapping("/deposit")
@@ -52,7 +50,7 @@ public class UserController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         List<Transfer>transferList = userService.findTransfersMadeByUserId(user.getId());
-        List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
+        List<TransferAdditionalInfoDTO> transferDTOList = getTransferDTOS(transferList);
 
         return ResponseEntity.ok(transferDTOList);
     }
@@ -65,17 +63,18 @@ public class UserController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         List<Transfer>transferList = userService.findTransfersReceivedByUserId(user.getId());
-        List<TransferDTO> transferDTOList = getTransferDTOS(transferList);
+        List<TransferAdditionalInfoDTO> transferDTOList = getTransferDTOS(transferList);
         return ResponseEntity.ok(transferDTOList);
     }
 
-    private static List<TransferDTO> getTransferDTOS(List<Transfer> transferList) {
-        List<TransferDTO>transferDTOList = new ArrayList<>();
+    private static List<TransferAdditionalInfoDTO> getTransferDTOS(List<Transfer> transferList) {
+        List<TransferAdditionalInfoDTO>transferDTOList = new ArrayList<>();
         for (Transfer transfer : transferList){
-            TransferDTO transferDTO = new TransferDTO(
+
+            TransferAdditionalInfoDTO transferDTO = new TransferAdditionalInfoDTO(
                     transfer.getTransfer_id(),
                     transfer.getRecipientUser().getUsername(),
-                    transfer.getRecipientUser().getCbu(),
+                    transfer.getRecipientUser().getCbu().toString(),
                     transfer.getOriginUser().getUsername(),
                     transfer.getTransferDate(),
                     transfer.getTransferAmount()
