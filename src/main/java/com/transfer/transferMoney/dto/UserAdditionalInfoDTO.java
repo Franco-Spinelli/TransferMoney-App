@@ -16,7 +16,7 @@ public class UserAdditionalInfoDTO {
     private  String firstname;
     private  String lastname;
     private  Long dni;
-    private BigInteger cbu;
+    private String cbu;
     private BigDecimal moneyAccount;
     private String email;
 }

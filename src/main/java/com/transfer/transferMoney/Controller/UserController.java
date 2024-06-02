@@ -31,7 +31,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
         String username = authentication.getName();
         User user = userService.findByUsername(username);
-        UserAdditionalInfoDTO userDTO = new UserAdditionalInfoDTO(user.getId(), user.getUsername(),user.getFirstname(),user.getLastname(),user.getDni(),user.getCbu(),user.getMoneyAccount(),user.getEmail());
+        UserAdditionalInfoDTO userDTO = new UserAdditionalInfoDTO(user.getId(), user.getUsername(),user.getFirstname(),user.getLastname(),user.getDni(),user.getCbu().toString(),user.getMoneyAccount(),user.getEmail());
         return ResponseEntity.ok(userDTO);
     }
     @PutMapping("/deposit")
