@@ -16,4 +16,6 @@ public interface UserService {
     User findByCbu(BigInteger cbu);
     boolean existByDni(Long dni);
     boolean existByUsername(String username);
+    User findUserAuthenticated();
+
 }

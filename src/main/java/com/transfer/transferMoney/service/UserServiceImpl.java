@@ -5,6 +5,8 @@ import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -55,5 +57,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean existByUsername(String username) {
         return  userRepository.findByUsername(username).isPresent();
+    }
+
+    @Override
+    public User findUserAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
+        String username = authentication.getName();
+        return findByUsername(username);
     }
 }
