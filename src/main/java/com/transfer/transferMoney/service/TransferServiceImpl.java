@@ -36,37 +36,27 @@ public class TransferServiceImpl implements TransferService {
      */
     @Override
     public Transfer saveTransfer(Transfer transfer) {
-        int numberResult = 0;
-        BigDecimal minimumTransferAmount = new BigDecimal(100);
-        // Find the authenticated user
-        User userOrigin = userService.findUserAuthenticated();
-        User userRecipient = userService.findByUsername(transfer.getRecipientUser().getUsername());
-        transfer.setOriginUser(userOrigin);
-            // Check if the transfer amount is above the minimum threshold and if the recipient is not the origin user
-            if (transfer.getTransferAmount().compareTo(minimumTransferAmount) >= numberResult &&
-                    !Objects.equals(transfer.getRecipientUser().getUsername(), userOrigin.getUsername()) &&
-                    !Objects.equals(transfer.getRecipientUser().getCbu(), userOrigin.getCbu())) {
+        // Check if the origin user has sufficient funds and other validation
+        if (isTransferValid(transfer)) {
+            // Find the authenticated user
+            User userOrigin = userService.findUserAuthenticated();
+            User userRecipient = userService.findByUsername(transfer.getRecipientUser().getUsername());
+            transfer.setOriginUser(userOrigin);
 
-                // Check if the origin user has sufficient funds
-                if (userOrigin.getMoneyAccount().compareTo(transfer.getTransferAmount()) >= numberResult) {
-                    // Subtract the transfer amount from the origin user's account
-                    userOrigin.setMoneyAccount(userOrigin.getMoneyAccount().subtract(transfer.getTransferAmount()));
-                    userService.save(userOrigin);
+            // Subtract the transfer amount from the origin user's account
+            userOrigin.setMoneyAccount(userOrigin.getMoneyAccount().subtract(transfer.getTransferAmount()));
+            userService.save(userOrigin);
 
-                    // Add the transfer amount to the recipient user's account
-                    userRecipient.setMoneyAccount(userRecipient.getMoneyAccount().add(transfer.getTransferAmount()));
-                    userService.save(userRecipient);
+            // Add the transfer amount to the recipient user's account
+            userRecipient.setMoneyAccount(userRecipient.getMoneyAccount().add(transfer.getTransferAmount()));
+            userService.save(userRecipient);
 
-                    // Save and return the transfer
-                    return transferRepository.save(transfer);
-                } else {
-                    // Throw an exception if the origin user has insufficient funds
-                    throw new AccountBalanceException("Insufficient funds");
-                }
-            } else {
-                // Throw an exception if the transfer amount is below the minimum threshold or if the recipient is the same as the origin user
-                throw new AccountBalanceException("The minimum transfer amount is " + minimumTransferAmount);
-            }
+            // Save and return the transfer
+            return transferRepository.save(transfer);
+        }
+
+        // This should never be reached because isTransferValid either returns true or throws an exception
+        throw new IllegalStateException("Unexpected state: transfer validation failed but no exception thrown");
     }
 
     @Override
@@ -95,6 +85,25 @@ public class TransferServiceImpl implements TransferService {
             transferDTOList.add(transferDTO);
         }
         return transferDTOList;
+    }
+    private boolean isTransferValid(Transfer transfer){
+        int numberResult = 0;
+        BigDecimal minimumTransferAmount = new BigDecimal(100);
+        // Find the authenticated user
+        User userOrigin = userService.findUserAuthenticated();
+        transfer.setOriginUser(userOrigin);
+        // Check if the transfer amount is above the minimum threshold and if the recipient is not the origin user
+        if (transfer.getTransferAmount().compareTo(minimumTransferAmount) <= numberResult ||
+                Objects.equals(transfer.getRecipientUser().getUsername(), userOrigin.getUsername()) ||
+                Objects.equals(transfer.getRecipientUser().getCbu(), userOrigin.getCbu())) {
+            throw new AccountBalanceException("The minimum transfer amount is " + minimumTransferAmount +
+                    " or the recipient is the same as the origin user.");
+        }
+        // Check if the origin user has sufficient funds
+        if (userOrigin.getMoneyAccount().compareTo(transfer.getTransferAmount()) < numberResult) {
+            throw new AccountBalanceException("Insufficient funds");
+        }
+        return true;
     }
 
 }
