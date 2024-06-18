@@ -20,7 +20,7 @@ TransferMoney App is a money transfer management application developed with Spri
 - **JPA (Java Persistence API)**
 - **MySQL (for production)**
 - **Maven**
-- - **JUnit**
+- **JUnit**
 
 - ## API Endpoints
 
