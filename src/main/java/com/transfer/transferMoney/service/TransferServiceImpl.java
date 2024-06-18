@@ -9,6 +9,7 @@ import com.transfer.transferMoney.exceptions.AccountBalanceException;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,12 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+@AllArgsConstructor
 @Service
 public class TransferServiceImpl implements TransferService {
-    @Autowired
     private TransferRepository transferRepository;
-    @Autowired
     private UserService userService;
 
     /**
@@ -86,14 +85,14 @@ public class TransferServiceImpl implements TransferService {
         }
         return transferDTOList;
     }
-    private boolean isTransferValid(Transfer transfer){
+    public boolean isTransferValid(Transfer transfer){
         int numberResult = 0;
         BigDecimal minimumTransferAmount = new BigDecimal(100);
         // Find the authenticated user
         User userOrigin = userService.findUserAuthenticated();
         transfer.setOriginUser(userOrigin);
         // Check if the transfer amount is above the minimum threshold and if the recipient is not the origin user
-        if (transfer.getTransferAmount().compareTo(minimumTransferAmount) <= numberResult ||
+        if (transfer.getTransferAmount().compareTo(minimumTransferAmount) < numberResult ||
                 Objects.equals(transfer.getRecipientUser().getUsername(), userOrigin.getUsername()) ||
                 Objects.equals(transfer.getRecipientUser().getCbu(), userOrigin.getCbu())) {
             throw new AccountBalanceException("The minimum transfer amount is " + minimumTransferAmount +
