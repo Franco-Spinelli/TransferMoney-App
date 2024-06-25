@@ -20,6 +20,11 @@ TransferMoney App is a money transfer management application developed with Spri
 - **JPA (Java Persistence API)**
 - **MySQL (for production)**
 - **Maven**
+- **JUnit**
+- **SpringDoc OpenAPI**
+- **Swagger UI**
+  
+To view the interactive API documentation, visit [Swagger UI](http://localhost:8080/v3/swagger-ui/index.html).
 
 - ## API Endpoints
 
