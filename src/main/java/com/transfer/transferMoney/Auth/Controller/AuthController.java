@@ -1,5 +1,9 @@
-package com.transfer.transferMoney.Auth;
+package com.transfer.transferMoney.Auth.Controller;
 
+import com.transfer.transferMoney.Auth.AuthResponse;
+import com.transfer.transferMoney.Auth.AuthService;
+import com.transfer.transferMoney.Auth.LoginRequest;
+import com.transfer.transferMoney.Auth.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
