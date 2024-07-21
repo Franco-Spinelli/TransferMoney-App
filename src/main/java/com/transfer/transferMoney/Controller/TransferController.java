@@ -22,7 +22,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("/api/transfer")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class TransferController {
     @Autowired
     private TransferService transferService;
