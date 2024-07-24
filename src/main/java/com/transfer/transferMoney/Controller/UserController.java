@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -60,9 +58,12 @@ public class UserController {
         depositDTO.setDate(new Date());
         // Save the updated user
         userService.save(user);
-        // Return a success message
-        return ResponseEntity.ok(String.format("Deposited $%s on %s", depositDTO.getMoneyToDeposit(),
+        // Create a response map
+        Map<String, String> response = new HashMap<>();
+        response.put("message", String.format("Deposited $%s on %s", depositDTO.getMoneyToDeposit(),
                 new SimpleDateFormat("MM/dd/yyyy").format(depositDTO.getDate())));
+        // Return the response map
+        return ResponseEntity.ok(response);
     }
 
     /**
