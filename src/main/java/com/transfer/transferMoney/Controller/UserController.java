@@ -105,5 +105,25 @@ public class UserController {
     public ResponseEntity<?> contacts() {
         return ResponseEntity.ok(userService.getContacts());
     }
+    /**
+     * Deletes a contact by its ID.
+     *
+     * This method handles the deletion of a contact identified by the provided ID.
+     * It first checks if the contact exists using the userService.
+     * If the contact does not exist, it returns a 404 Not Found response.
+     * If the contact exists, it deletes the contact and returns a 200 OK response.
+     *
+     * @param id The ID of the contact to be deleted.
+     * @return A ResponseEntity with a status of 200 OK if the deletion is successful,
+     *         or 404 Not Found if the contact does not exist.
+     */
+    @DeleteMapping("/delete-contact/{id}")
+    public ResponseEntity<Void> deleteContact(@PathVariable Integer id) {
+        if (!userService.existById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        userService.deleteContact(id);
+        return ResponseEntity.ok().build();
+    }
 
 }

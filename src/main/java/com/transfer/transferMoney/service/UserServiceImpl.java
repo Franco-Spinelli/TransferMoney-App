@@ -55,6 +55,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public boolean existById(Integer id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
     public boolean existByUsername(String username) {
         return  userRepository.findByUsername(username).isPresent();
     }
@@ -72,5 +77,12 @@ public class UserServiceImpl implements UserService{
         return user.getContacts().stream()
                 .map(User::getUsername)
                 .toList();
+    }
+
+    @Override
+    public void deleteContact(Integer id) {
+        User user = findUserAuthenticated();
+        user.getContacts().removeIf(contact -> contact.getId().equals(id));
+        save(user);
     }
 }
