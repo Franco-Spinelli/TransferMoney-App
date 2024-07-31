@@ -4,7 +4,6 @@ import com.transfer.transferMoney.Repository.UserRepository;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +55,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public boolean existById(Integer id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
     public boolean existByUsername(String username) {
         return  userRepository.findByUsername(username).isPresent();
     }
@@ -65,5 +69,20 @@ public class UserServiceImpl implements UserService{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //Find user authenticated in  the moment
         String username = authentication.getName();
         return findByUsername(username);
+    }
+
+    @Override
+    public List<String> getContacts() {
+        User user = findUserAuthenticated();
+        return user.getContacts().stream()
+                .map(User::getUsername)
+                .toList();
+    }
+
+    @Override
+    public void deleteContact(Integer id) {
+        User user = findUserAuthenticated();
+        user.getContacts().removeIf(contact -> contact.getId().equals(id));
+        save(user);
     }
 }

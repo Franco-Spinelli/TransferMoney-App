@@ -15,7 +15,10 @@ public interface UserService {
     void save(User user);
     User findByCbu(BigInteger cbu);
     boolean existByDni(Long dni);
+    boolean existById(Integer id);
     boolean existByUsername(String username);
     User findUserAuthenticated();
+    List<String>getContacts();
+    void deleteContact(Integer id);
 
 }

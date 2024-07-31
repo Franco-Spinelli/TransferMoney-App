@@ -8,12 +8,9 @@ import com.transfer.transferMoney.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -99,6 +96,34 @@ public class UserController {
         // Return the transfer DTOs
         return ResponseEntity.ok(transferDTOList);
     }
-
+    /**
+     * Endpoint to retrieve the list of contacts for the authenticated user.
+     *
+     * @return ResponseEntity with the list of the user's contacts.
+     */
+    @GetMapping("/get-contacts")
+    public ResponseEntity<?> contacts() {
+        return ResponseEntity.ok(userService.getContacts());
+    }
+    /**
+     * Deletes a contact by its ID.
+     *
+     * This method handles the deletion of a contact identified by the provided ID.
+     * It first checks if the contact exists using the userService.
+     * If the contact does not exist, it returns a 404 Not Found response.
+     * If the contact exists, it deletes the contact and returns a 200 OK response.
+     *
+     * @param id The ID of the contact to be deleted.
+     * @return A ResponseEntity with a status of 200 OK if the deletion is successful,
+     *         or 404 Not Found if the contact does not exist.
+     */
+    @DeleteMapping("/delete-contact/{id}")
+    public ResponseEntity<Void> deleteContact(@PathVariable Integer id) {
+        if (!userService.existById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        userService.deleteContact(id);
+        return ResponseEntity.ok().build();
+    }
 
 }

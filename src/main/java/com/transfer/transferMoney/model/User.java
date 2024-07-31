@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -42,6 +43,13 @@ public class User implements UserDetails {
     private List<Transfer> receivedTransferList;
     @OneToMany(mappedBy = "originUser")
     private List<Transfer> myTransferList;
+    @ManyToMany
+    @JoinTable(
+            name = "user_contacts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "contact_id")
+    )
+    private Set<User> contacts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

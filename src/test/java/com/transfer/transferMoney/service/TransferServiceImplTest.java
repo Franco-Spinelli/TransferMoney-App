@@ -89,7 +89,7 @@ class TransferServiceImplTest {
         given(userService.findByUsername(anyString())).willReturn(user2);
         given(transferRepository.save(any(Transfer.class))).willReturn(transfer);
         //WHEN
-        Transfer saveTransfer = underTest.saveTransfer(transfer);
+        Transfer saveTransfer = underTest.saveTransfer(transfer,true);
         //THEN
         assertThat(saveTransfer).isNotNull();
         assertThat(underTest.isTransferValid(transfer)).isTrue();
@@ -108,7 +108,7 @@ class TransferServiceImplTest {
 
         // WHEN
         assertThrows(AccountBalanceException.class, () -> {
-            underTest.saveTransfer(invalidTransfer);
+            underTest.saveTransfer(invalidTransfer,true);
         });
 
         // THEN
@@ -130,7 +130,7 @@ class TransferServiceImplTest {
 
         // WHEN
        assertThrows(AccountBalanceException.class, () -> {
-            underTest.saveTransfer(invalidTransfer);
+            underTest.saveTransfer(invalidTransfer,true);
         });
 
         // THEN
