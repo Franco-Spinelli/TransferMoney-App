@@ -10,10 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
 @AllArgsConstructor
 @Service
 public class TransferServiceImpl implements TransferService {
@@ -40,6 +38,9 @@ public class TransferServiceImpl implements TransferService {
             userOrigin.setMoneyAccount(userOrigin.getMoneyAccount().subtract(transfer.getTransferAmount()));
             userService.save(userOrigin);
             if(addContact){
+                if (userOrigin.getContacts() == null) {
+                    userOrigin.setContacts(new HashSet<>());
+                }
                 userOrigin.getContacts().add(userRecipient);
             }
             // Add the transfer amount to the recipient user's account
