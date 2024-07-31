@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface TransferService {
-    Transfer saveTransfer(Transfer transfer);
+    Transfer saveTransfer(Transfer transfer, Boolean addContact);
     TransferDTO searchTransferById(Integer id);
     List<TransferAdditionalInfoDTO> getTransferDTOS(List<Transfer> transferList);
 

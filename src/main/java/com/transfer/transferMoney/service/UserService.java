@@ -17,5 +17,6 @@ public interface UserService {
     boolean existByDni(Long dni);
     boolean existByUsername(String username);
     User findUserAuthenticated();
+    List<String>getContacts();
 
 }

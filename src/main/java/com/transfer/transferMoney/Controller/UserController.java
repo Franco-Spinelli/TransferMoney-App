@@ -8,12 +8,9 @@ import com.transfer.transferMoney.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -99,6 +96,14 @@ public class UserController {
         // Return the transfer DTOs
         return ResponseEntity.ok(transferDTOList);
     }
-
+    /**
+     * Endpoint to retrieve the list of contacts for the authenticated user.
+     *
+     * @return ResponseEntity with the list of the user's contacts.
+     */
+    @GetMapping("/get-contacts")
+    public ResponseEntity<?> contacts() {
+        return ResponseEntity.ok(userService.getContacts());
+    }
 
 }

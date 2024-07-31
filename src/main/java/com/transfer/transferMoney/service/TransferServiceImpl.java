@@ -1,18 +1,12 @@
 package com.transfer.transferMoney.service;
 
 import com.transfer.transferMoney.Repository.TransferRepository;
-import com.transfer.transferMoney.Repository.UserRepository;
 import com.transfer.transferMoney.dto.TransferAdditionalInfoDTO;
 import com.transfer.transferMoney.dto.TransferDTO;
-import com.transfer.transferMoney.dto.UserDTO;
 import com.transfer.transferMoney.exceptions.AccountBalanceException;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,7 +28,7 @@ public class TransferServiceImpl implements TransferService {
      * @throws AccountBalanceException if the origin user does not have sufficient funds or if the transfer amount is below the minimum threshold.
      */
     @Override
-    public Transfer saveTransfer(Transfer transfer) {
+    public Transfer saveTransfer(Transfer transfer, Boolean addContact) {
         // Check if the origin user has sufficient funds and other validation
         if (isTransferValid(transfer)) {
             // Find the authenticated user
@@ -45,7 +39,9 @@ public class TransferServiceImpl implements TransferService {
             // Subtract the transfer amount from the origin user's account
             userOrigin.setMoneyAccount(userOrigin.getMoneyAccount().subtract(transfer.getTransferAmount()));
             userService.save(userOrigin);
-
+            if(addContact){
+                userOrigin.getContacts().add(userRecipient);
+            }
             // Add the transfer amount to the recipient user's account
             userRecipient.setMoneyAccount(userRecipient.getMoneyAccount().add(transfer.getTransferAmount()));
             userService.save(userRecipient);
