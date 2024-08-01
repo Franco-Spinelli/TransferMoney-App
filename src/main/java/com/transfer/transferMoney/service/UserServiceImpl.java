@@ -1,8 +1,10 @@
 package com.transfer.transferMoney.service;
 
 import com.transfer.transferMoney.Repository.UserRepository;
+import com.transfer.transferMoney.dto.UserDTO;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
@@ -55,6 +57,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public boolean existByCbu(BigInteger cbu) {
+        return userRepository.findByCbu(cbu).isPresent();
+    }
+
+    @Override
     public boolean existById(Integer id) {
         return userRepository.existsById(id);
     }
@@ -80,9 +87,34 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteContact(Integer id) {
+    public void deleteContact(String username) {
         User user = findUserAuthenticated();
-        user.getContacts().removeIf(contact -> contact.getId().equals(id));
+        user.getContacts().removeIf(contact -> contact.getUsername().equals(username));
         save(user);
+    }
+
+    @Override
+    public User findUser(String username, BigInteger cbu) {
+        User user;
+        if(existByUsername(username)){
+            user = findByUsername(username);
+        } else if (existByCbu(cbu)) {
+            user = findByCbu(cbu);
+        }else{
+            throw new EntityNotFoundException();
+        }
+        return user;
+    }
+
+    @Override
+    public UserDTO userToUserDto(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .username(user.getUsername())
+                .dni(user.getDni())
+                .cbu(user.getCbu())
+                .build();
     }
 }

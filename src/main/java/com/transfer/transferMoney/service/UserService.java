@@ -1,5 +1,6 @@
 package com.transfer.transferMoney.service;
 
+import com.transfer.transferMoney.dto.UserDTO;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
 
@@ -15,10 +16,13 @@ public interface UserService {
     void save(User user);
     User findByCbu(BigInteger cbu);
     boolean existByDni(Long dni);
+    boolean existByCbu(BigInteger cbu);
     boolean existById(Integer id);
     boolean existByUsername(String username);
     User findUserAuthenticated();
     List<String>getContacts();
-    void deleteContact(Integer id);
+    void deleteContact(String username);
+    User findUser(String username, BigInteger cbu);
+    UserDTO userToUserDto(User user);
 
 }

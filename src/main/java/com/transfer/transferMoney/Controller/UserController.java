@@ -1,5 +1,6 @@
 package com.transfer.transferMoney.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transfer.transferMoney.dto.*;
 import com.transfer.transferMoney.model.Transfer;
 import com.transfer.transferMoney.model.User;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -106,24 +108,46 @@ public class UserController {
         return ResponseEntity.ok(userService.getContacts());
     }
     /**
-     * Deletes a contact by its ID.
+     * Deletes a contact by its username.
      *
-     * This method handles the deletion of a contact identified by the provided ID.
+     * This method handles the deletion of a contact identified by the provided username.
      * It first checks if the contact exists using the userService.
      * If the contact does not exist, it returns a 404 Not Found response.
      * If the contact exists, it deletes the contact and returns a 200 OK response.
      *
-     * @param id The ID of the contact to be deleted.
+     * @param username The username of the contact to be deleted.
      * @return A ResponseEntity with a status of 200 OK if the deletion is successful,
      *         or 404 Not Found if the contact does not exist.
      */
-    @DeleteMapping("/delete-contact/{id}")
-    public ResponseEntity<Void> deleteContact(@PathVariable Integer id) {
-        if (!userService.existById(id)) {
+    @DeleteMapping("/delete-contact/{username}")
+    public ResponseEntity<Void> deleteContact(@PathVariable String username) {
+        if (!userService.existByUsername(username)) {
             return ResponseEntity.notFound().build();
         }
-        userService.deleteContact(id);
+        userService.deleteContact(username);
         return ResponseEntity.ok().build();
     }
-
+    /**
+     * Handles GET requests to the "/get-user" endpoint.
+     *
+     * This method expects a request body containing a map with keys "cbu" and "username".
+     * It retrieves the user based on these values. If the user is found, it converts the user
+     * to a UserDTO and returns it with a 200 OK response. If the user is not found, it returns
+     * a 404 Not Found response.
+     *
+     * @param request A map containing the keys "cbu" (BigInteger) and "username" (String).
+     * @return ResponseEntity<?> containing the UserDTO if found, or a 404 Not Found response.
+     */
+    @GetMapping("/get-user")
+    public ResponseEntity<?> getUser(@RequestBody Map<String, Object> request) {
+        ObjectMapper mapper = new ObjectMapper();
+        BigInteger cbu = mapper.convertValue(request.get("cbu"), BigInteger.class);
+        String username = mapper.convertValue(request.get("username"), String.class);
+        User user = userService.findUser(username,cbu);
+        if(user==null){
+            return ResponseEntity.notFound().build();
+        }
+        UserDTO userDTO = userService.userToUserDto(user);
+        return ResponseEntity.ok(userDTO);
+    }
 }
