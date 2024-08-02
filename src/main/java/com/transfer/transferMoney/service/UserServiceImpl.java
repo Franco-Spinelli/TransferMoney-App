@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService{
                 .lastname(user.getLastname())
                 .username(user.getUsername())
                 .dni(user.getDni())
-                .cbu(user.getCbu())
+                .cbu(user.getCbu().toString())
                 .build();
     }
 }

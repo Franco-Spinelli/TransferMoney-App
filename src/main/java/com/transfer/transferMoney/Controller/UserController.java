@@ -138,11 +138,11 @@ public class UserController {
      * @param request A map containing the keys "cbu" (BigInteger) and "username" (String).
      * @return ResponseEntity<?> containing the UserDTO if found, or a 404 Not Found response.
      */
-    @GetMapping("/get-user")
+    @PostMapping("/get-user")
     public ResponseEntity<?> getUser(@RequestBody Map<String, Object> request) {
         ObjectMapper mapper = new ObjectMapper();
-        BigInteger cbu = mapper.convertValue(request.get("cbu"), BigInteger.class);
-        String username = mapper.convertValue(request.get("username"), String.class);
+        BigInteger cbu = request.get("cbu") != null ? mapper.convertValue(request.get("cbu"), BigInteger.class) : null;
+        String username = request.get("username") != null ? mapper.convertValue(request.get("username"), String.class) : null;
         User user = userService.findUser(username,cbu);
         if(user==null){
             return ResponseEntity.notFound().build();

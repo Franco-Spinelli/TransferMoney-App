@@ -17,5 +17,5 @@ public class UserDTO {
     private  String firstname;
     private  String lastname;
     private  Long dni;
-    private BigInteger cbu;
+    private String cbu;
 }
